@@ -1,0 +1,12 @@
+.venv/
+.venv-build/
+__pycache__/
+*.pyc
+.pytest_cache/
+build/
+dist/
+*.db
+*.db-wal
+*.db-shm
+*.egg-info/
+.claude/
