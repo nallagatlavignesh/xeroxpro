@@ -26,15 +26,22 @@ CARDS = [  # key, title key
 class Card(QFrame):
     def __init__(self) -> None:
         super().__init__()
-        self.setStyleSheet("Card { border: 1px solid #D5E2E1; border-radius: 8px; background: #F8FBFB; }"
-                           " QLabel { background: transparent; }")
+        self.setObjectName("card")
         v = QVBoxLayout(self)
         v.setContentsMargins(14, 10, 14, 10)
         self.title, self.value = QLabel(), QLabel()
         self.title.setObjectName("hint")
-        self.value.setStyleSheet("font-size: 22px; font-weight: 700; color: #0F766E;")
+        self.value.setStyleSheet("font-size: 22px; font-weight: 700;")  # colour comes from the 'tone' property
         v.addWidget(self.title)
         v.addWidget(self.value)
+        self.set_value("", "")
+
+    def set_value(self, text: str, tone: str) -> None:
+        """tone: '' (teal), 'warn' (amber: money owed to us) or 'bad' (red: negative)."""
+        self.value.setText(text)
+        self.value.setProperty("tone", tone)
+        self.value.setStyleSheet(f"font-size: 22px; font-weight: 700; color: "
+                                 f"{ {'warn': '#B45309', 'bad': '#B91C1C'}.get(tone, '#0F766E') };")
 
 
 class DashboardPage(Page):
@@ -126,8 +133,9 @@ class DashboardPage(Page):
                   "upi": format_inr(c.net("upi")), "other": format_inr(c.net("other")),
                   "expenses": format_inr(d.expenses), "movement": format_inr(d.cash_movement),
                   "jobs": str(d.pending_jobs), "low": str(d.low_stock)}
+        tones = {"credit": "warn" if d.outstanding_credit else "", "movement": "bad" if d.cash_movement < 0 else ""}
         for key, text in values.items():
-            self.cards[key].value.setText(text)
+            self.cards[key].set_value(text, tones.get(key, ""))
         self.backup_banner.setText(self._tr("backup.stale", days=backup_service.STALE_AFTER_DAYS) if stale else "")
         self.today_l.setText(f"{t('dash.today')}: {today.strftime('%d-%m-%Y')}")
         self.week.set_data([x.strftime("%d/%m") for x, _ in week], [v for _, v in week])

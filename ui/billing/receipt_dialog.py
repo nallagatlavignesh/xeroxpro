@@ -16,6 +16,7 @@ from application.use_cases.cancel_bill import cancel_bill
 from business.errors import DomainError
 from database.connection import session_scope
 from infrastructure.pdf import receipt as receipt_pdf
+from ui import roles
 from ui.page import amp, request_pin, show_domain_error
 
 log = logging.getLogger(__name__)
@@ -59,6 +60,7 @@ class ReceiptDialog(QDialog):
         self.pdf_btn.clicked.connect(self._save_pdf)
         self.cancel_btn.clicked.connect(self._cancel_bill)
         self.close_btn.clicked.connect(self.accept)
+        roles.apply(self, {"print_btn": roles.PRIMARY, "cancel_btn": roles.DANGER})
         self._retranslate()
         self._render()
 

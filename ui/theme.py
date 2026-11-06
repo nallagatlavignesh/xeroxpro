@@ -16,5 +16,6 @@ def apply_theme(app: QApplication) -> None:
     app.setFont(font)
     app.setWindowIcon(QIcon(str(config.resource_path("icons", "xeroxpro.png"))))
     qss = config.resource_path("styles", "app.qss").read_text(encoding="utf-8")
+    qss = qss.replace("@ICONS@", config.resource_path("icons").as_posix())  # QSS url() needs forward slashes
     if app.styleSheet() != qss:  # re-applying an identical stylesheet re-polishes every widget: slow once many exist
         app.setStyleSheet(qss)

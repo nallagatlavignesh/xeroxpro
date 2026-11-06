@@ -22,7 +22,9 @@ def _table(columns: int, stretch: int = 0) -> QTableWidget:
     t.setSelectionBehavior(QAbstractItemView.SelectionBehavior.SelectRows)
     t.setSelectionMode(QAbstractItemView.SelectionMode.SingleSelection)
     t.verticalHeader().setVisible(False)
-    t.horizontalHeader().setSectionResizeMode(stretch, QHeaderView.ResizeMode.Stretch)
+    header = t.horizontalHeader()
+    header.setSectionResizeMode(QHeaderView.ResizeMode.ResizeToContents)  # no clipped headings or phone numbers
+    header.setSectionResizeMode(stretch, QHeaderView.ResizeMode.Stretch)
     return t
 
 

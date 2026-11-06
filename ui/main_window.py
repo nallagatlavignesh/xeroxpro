@@ -22,6 +22,7 @@ from ui.backup.backup_page import BackupPage
 from ui.reports.reports_page import ReportsPage
 from ui.inventory.inventory_page import InventoryPage
 from ui.jobs.jobs_page import JobsPage
+from ui import roles
 from ui.page import PlaceholderPage, amp
 from ui.printing.pdf_page import PdfPrintPage
 from ui.settings.settings_page import SettingsPage
@@ -98,6 +99,7 @@ class MainWindow(QMainWindow):
         outer.addLayout(right, 1)
 
         self.nav_buttons["dashboard"].setChecked(True)
+        roles.apply_to_window(self)
         self.retranslate()
 
     def _make_page(self, key: str, tkey: str) -> QWidget:
